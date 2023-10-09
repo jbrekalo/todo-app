@@ -1,8 +1,17 @@
 :root {
-  --background-color: hsla(233, 11%, 84%, 1);
+  --background-color: hsl(0, 0%, 98%);
   --table-primary-color: hsla(0, 0%, 100%, 1);
+  --table-secondary-color: hsla(236, 32%, 92%, 1);
   --font-primary-color: hsla(235, 19%, 35%, 1);
   --font-secondary-color: hsla(235, 9%, 61%, 1);
+  --font-selected-color: hsla(220, 98%, 61%, 1);
+  --font-checked-color: hsla(233, 11%, 84%, 1);
+  --icon-checked-color: linear-gradient(
+    135deg,
+    hsla(192, 100%, 67%, 1),
+    hsla(280, 87%, 65%, 1)
+  );
+  --icon-switcher-color: hsla(0, 0%, 100%, 1);
 
   /* font-families */
   --ff-josefin: "Josefin Sans", sans-serif;
@@ -125,7 +134,7 @@ select {
   position: fixed;
   top: 0;
   width: 100vw;
-  z-index: 1;
+  z-index: -1;
 }
 
 .main {
@@ -139,21 +148,142 @@ select {
 }
 
 .todo__header {
-  color: var(--font-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   font-size: 4rem;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   letter-spacing: 1.5rem;
   text-transform: uppercase;
+  color: var(--table-primary-color);
+
+  margin-top: 7rem;
+  margin-bottom: 4rem;
 }
 
 .todo__input {
   width: 54rem;
   height: 6.4rem;
+  padding-left: 7.2rem;
 
   border: none;
   border-radius: 0.5rem;
+  box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
 
-  background-color: var(--item-color);
+  font-size: 1.8rem;
+
+  background-color: var(--table-primary-color);
+}
+
+.todo__input::placeholder {
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.025rem;
+  color: var(--font-secondary-color);
+}
+
+.tasks__container {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 0.5rem;
+  box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
+  overflow: hidden;
+
+  width: 54rem;
+
+  margin-top: 2.4rem;
+  margin-bottom: 5rem;
+}
+
+.task {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  width: 54rem;
+  height: 6.4rem;
+  padding-left: 2.4rem;
+  margin: 0px;
+
+  font-size: 1.8rem;
+
+  border-bottom: 0.1rem solid var(--table-secondary-color);
+  background-color: var(--table-primary-color);
+}
+
+.task > li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.task input[type="checkbox"] {
+  appearance: none;
+  width: 2.4rem;
+  height: 2.4rem;
+
+  border: 0.1rem solid var(--table-secondary-color);
+  border-radius: 100%;
+}
+
+.task input[type="checkbox"]:checked {
+  appearance: none;
+  width: 2.4rem;
+  height: 2.4rem;
+
+  border: none;
+  border-radius: 100%;
+  background: url(../images/icon-check.svg), var(--icon-checked-color);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.task > li > label {
+  margin-left: 2.4rem;
+}
+
+.tasks__footer {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  width: 54rem;
+  height: 6.4rem;
+  padding: 0 2.4rem;
+  margin: 0px;
+
+  color: var(--font-secondary-color);
+  font-size: 1.4rem;
+
+  box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
+  background-color: var(--table-primary-color);
+}
+
+.tasks__footer div {
+  display: flex;
+  gap: 1.9rem;
+
+  font-weight: 700;
+}
+
+.tasks__footer > div > span:first-child {
+  color: var(--font-selected-color);
+}
+
+.bottom-message {
+  text-align: center;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--font-secondary-color);
+
+  margin-bottom: 5.2rem;
 }
