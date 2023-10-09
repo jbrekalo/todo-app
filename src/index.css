@@ -164,6 +164,10 @@ select {
   margin-bottom: 4rem;
 }
 
+.todo__header > svg {
+  cursor: pointer;
+}
+
 .todo__input {
   width: 54rem;
   height: 6.4rem;
@@ -174,6 +178,7 @@ select {
   box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
 
   font-size: 1.8rem;
+  caret-color: var(--font-selected-color);
 
   background-color: var(--table-primary-color);
 }
@@ -231,6 +236,21 @@ select {
 
   border: 0.1rem solid var(--table-secondary-color);
   border-radius: 100%;
+
+  cursor: pointer;
+}
+
+.task input[type="checkbox"]:hover {
+  border: 0.1rem solid transparent;
+  border-radius: 100%;
+  background: linear-gradient(
+      to right,
+      var(--table-primary-color),
+      var(--table-primary-color)
+    ),
+    linear-gradient(135deg, hsla(192, 100%, 67%, 1), hsla(280, 87%, 65%, 1));
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
 }
 
 .task input[type="checkbox"]:checked {
@@ -247,6 +267,7 @@ select {
 
 .task > li > label {
   margin-left: 2.4rem;
+  cursor: pointer;
 }
 
 .tasks__footer {
@@ -276,6 +297,19 @@ select {
 
 .tasks__footer > div > span:first-child {
   color: var(--font-selected-color);
+}
+
+.tasks__footer > div > span {
+  cursor: pointer;
+}
+
+.tasks__footer > div > span:hover {
+  color: var(--font-primary-color);
+}
+
+.tasks__footer > span:last-child:hover {
+  color: var(--font-primary-color);
+  cursor: pointer;
 }
 
 .bottom-message {
