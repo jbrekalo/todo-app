@@ -1,20 +1,76 @@
+import { useState } from "react";
+
 const tasks = [
-  { text: "Complete online JavaScript course", completed: true },
-  { text: "Jog around the park 3x", completed: false },
-  { text: "10 minutes meditation", completed: false },
-  { text: "Read for 1 hour", completed: false },
-  { text: "Pick up groceries", completed: false },
-  { text: "Complete Todo App on Frontend Mentor", completed: false },
+  {
+    text: "Complete online JavaScript course",
+    completed: true,
+    id: crypto.randomUUID(),
+  },
+  { text: "Jog around the park 3x", completed: false, id: crypto.randomUUID() },
+  { text: "10 minutes meditation", completed: false, id: crypto.randomUUID() },
+  { text: "Read for 1 hour", completed: false, id: crypto.randomUUID() },
+  { text: "Pick up groceries", completed: false, id: crypto.randomUUID() },
+  {
+    text: "Complete Todo App on Frontend Mentor",
+    completed: false,
+    id: crypto.randomUUID(),
+  },
 ];
 
 export default function App() {
+  const [taskArr, setTaskArr] = useState(tasks);
+  const [newTaskText, setNewTaskText] = useState("");
+
+  function handleTaskInput(taskInput) {
+    setNewTaskText(taskInput);
+  }
+
+  function handleTaskSubmit(e) {
+    e.preventDefault();
+
+    if (!newTaskText) return;
+
+    const newTask = {
+      text: newTaskText,
+      completed: false,
+      id: crypto.randomUUID(),
+    };
+
+    setTaskArr((task) => [...task, newTask]);
+
+    setNewTaskText("");
+  }
+
+  function handleTaskCompletion(id) {
+    setTaskArr(
+      taskArr.map((task) =>
+        task.id === id
+          ? {
+              ...task,
+              ...(task.completed ? { completed: false } : { completed: true }),
+            }
+          : task
+      )
+    );
+  }
+
+  function handleActive() {
+    setTaskArr(taskArr.filter((task) => task.completed === false));
+  }
+
   return (
     <div>
       <BackgroundImage />
       <TodoContainer>
         <Header />
-        <TodoInput />
-        <Tasks />
+        <TaskInput
+          newTaskText={newTaskText}
+          onTaskInput={handleTaskInput}
+          onTaskSubmit={handleTaskSubmit}
+        />
+        <Tasks taskArr={taskArr} onTaskCompletion={handleTaskCompletion}>
+          <TasksFooter taskArr={taskArr} onActive={handleActive} />
+        </Tasks>
         <BottomMessage />
       </TodoContainer>
     </div>
@@ -55,47 +111,72 @@ function Header() {
   );
 }
 
-function TodoInput() {
+function TaskInput({ newTaskText, onTaskInput, onTaskSubmit }) {
   return (
-    <input
-      type="text"
-      name="task"
-      id="task"
-      placeholder="Create a new todo…"
-      className="todo__input"
-    />
+    <form action="submit" onSubmit={onTaskSubmit}>
+      <input
+        type="text"
+        name="task"
+        id="task"
+        placeholder="Create a new todo…"
+        className="todo__input"
+        value={newTaskText}
+        onChange={(e) => onTaskInput(e.target.value)}
+      />
+    </form>
   );
 }
 
-function Tasks() {
+function Tasks({ taskArr, onTaskCompletion, children }) {
   return (
     <div className="tasks__container">
-      {tasks.map((task, i) => (
-        <Task text={task.text} key={i} num={i + 1} />
+      {taskArr.map((task, i) => (
+        <Task
+          onTaskCompletion={onTaskCompletion}
+          task={task}
+          num={i + 1}
+          key={i}
+        />
       ))}
-      <TasksFooter />
+      {children}
     </div>
   );
 }
 
-function Task({ text, num }) {
+function Task({ task, onTaskCompletion, num }) {
   return (
     <ul className="task">
       <li>
-        <input type="checkbox" name={`cb${num}`} id={`cb${num}`} />
-        <label htmlFor={`cb${num}`}>{text}</label>
+        <input
+          type="checkbox"
+          name={`cb${num}`}
+          id={`cb${num}`}
+          className={
+            task.completed ? "task__checkbox-checked" : "task__checkbox"
+          }
+          onChange={() => onTaskCompletion(task.id)}
+        />
+        <label
+          htmlFor={`cb${num}`}
+          className={task.completed ? "task__label-checked" : "task__label"}
+        >
+          {task.text}
+        </label>
       </li>
     </ul>
   );
 }
 
-function TasksFooter() {
+function TasksFooter({ taskArr, onActive }) {
   return (
     <div className="tasks__footer">
-      <span>X items left</span>
+      <span>
+        {Object(taskArr.filter((task) => task.completed === false)).length}{" "}
+        items left
+      </span>
       <div>
         <span>All</span>
-        <span>Active</span>
+        <span onClick={onActive}>Active</span>
         <span>Completed</span>
       </div>
       <span>Clear Completed</span>

@@ -229,7 +229,7 @@ select {
   align-items: center;
 }
 
-.task input[type="checkbox"] {
+.task__checkbox {
   appearance: none;
   width: 2.4rem;
   height: 2.4rem;
@@ -240,7 +240,7 @@ select {
   cursor: pointer;
 }
 
-.task input[type="checkbox"]:hover {
+.task__checkbox:hover {
   border: 0.1rem solid transparent;
   border-radius: 100%;
   background: linear-gradient(
@@ -253,7 +253,7 @@ select {
   background-origin: padding-box, border-box;
 }
 
-.task input[type="checkbox"]:checked {
+.task__checkbox-checked {
   appearance: none;
   width: 2.4rem;
   height: 2.4rem;
@@ -263,10 +263,21 @@ select {
   background: url(../images/icon-check.svg), var(--icon-checked-color);
   background-position: center;
   background-repeat: no-repeat;
+
+  cursor: pointer;
 }
 
-.task > li > label {
+.task__label {
   margin-left: 2.4rem;
+  cursor: pointer;
+}
+
+.task__label-checked {
+  margin-left: 2.4rem;
+
+  color: var(--font-checked-color);
+  text-decoration: line-through;
+
   cursor: pointer;
 }
 
