@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tasks = [
   {
@@ -19,11 +19,9 @@ const tasks = [
 
 export default function App() {
   const [taskList, setTaskList] = useState(tasks);
+  const [filterList, setFilterList] = useState(tasks);
   const [newTaskText, setNewTaskText] = useState("");
   const [filter, setFilter] = useState("all");
-
-  let activeTasks = taskList.filter((task) => !task.completed);
-  let completedTasks = taskList.filter((task) => task.completed);
 
   function handleTaskInput(taskInput) {
     setNewTaskText(taskInput);
@@ -41,6 +39,7 @@ export default function App() {
     };
 
     setTaskList((task) => [...task, newTask]);
+    setFilterList((task) => [...task, newTask]);
 
     setNewTaskText("");
   }
@@ -57,15 +56,38 @@ export default function App() {
       )
     );
 
-    handleSetFilter(filter);
+    setFilterList(
+      filterList.map((task) =>
+        task.id === id
+          ? {
+              ...task,
+              completed: !task.completed,
+            }
+          : task
+      )
+    );
+
+    handleFilterTasks(filter);
   }
 
-  function handleSetFilter(selectedFilter) {
+  function handleFilterTasks(selectedFilter) {
     setFilter(selectedFilter);
-  }
 
-  function handleClearCompleted() {
-    setTaskList(taskList.filter((task) => !task.completed));
+    setFilterList(
+      taskList.filter((task) => {
+        if (selectedFilter === "active") {
+          return !task.completed;
+        }
+        if (selectedFilter === "completed") {
+          return task.completed;
+        }
+        return true;
+      })
+    );
+
+    if (selectedFilter === "all") {
+      setFilterList(taskList);
+    }
   }
 
   return (
@@ -78,18 +100,11 @@ export default function App() {
           onTaskInput={handleTaskInput}
           onTaskSubmit={handleTaskSubmit}
         />
-        <Tasks
-          taskList={taskList}
-          activeTasks={activeTasks}
-          completedTasks={completedTasks}
-          onUpdateTasks={handleUpdateTasks}
-          filter={filter}
-        >
+        <Tasks filterList={filterList} onUpdateTasks={handleUpdateTasks}>
           <TasksFooter
-            taskList={taskList}
-            onSetFilter={handleSetFilter}
+            filterList={filterList}
+            onFilterTasks={handleFilterTasks}
             filter={filter}
-            onClearCompleted={handleClearCompleted}
           />
         </Tasks>
         <BottomMessage />
@@ -148,42 +163,12 @@ function TaskInput({ newTaskText, onTaskInput, onTaskSubmit }) {
   );
 }
 
-function Tasks({
-  taskList,
-  activeTasks,
-  completedTasks,
-  onUpdateTasks,
-  filter,
-  children,
-}) {
+function Tasks({ filterList, onUpdateTasks, children }) {
   return (
     <div className="tasks__container">
-      {filter === "active"
-        ? activeTasks.map((task, i) => (
-            <Task
-              onUpdateTasks={onUpdateTasks}
-              task={task}
-              num={i + 1}
-              key={i}
-            />
-          ))
-        : filter === "completed"
-        ? completedTasks.map((task, i) => (
-            <Task
-              onUpdateTasks={onUpdateTasks}
-              task={task}
-              num={i + 1}
-              key={i}
-            />
-          ))
-        : taskList.map((task, i) => (
-            <Task
-              onUpdateTasks={onUpdateTasks}
-              task={task}
-              num={i + 1}
-              key={i}
-            />
-          ))}
+      {filterList.map((task, i) => (
+        <Task onUpdateTasks={onUpdateTasks} task={task} num={i + 1} key={i} />
+      ))}
       {children}
     </div>
   );
@@ -213,34 +198,34 @@ function Task({ task, onUpdateTasks, num }) {
   );
 }
 
-function TasksFooter({ taskList, onSetFilter, filter, onClearCompleted }) {
+function TasksFooter({ filterList, onFilterTasks, filter }) {
   return (
     <div className="tasks__footer">
       <span>
-        {Object(taskList.filter((task) => task.completed === false)).length}{" "}
+        {Object(filterList.filter((task) => task.completed === false)).length}{" "}
         items left
       </span>
       <div>
         <span
-          onClick={() => onSetFilter("all")}
+          onClick={() => onFilterTasks("all")}
           className={filter === "all" ? "tasks__footer--selected" : ""}
         >
           All
         </span>
         <span
-          onClick={() => onSetFilter("active")}
+          onClick={() => onFilterTasks("active")}
           className={filter === "active" ? "tasks__footer--selected" : ""}
         >
           Active
         </span>
         <span
-          onClick={() => onSetFilter("completed")}
+          onClick={() => onFilterTasks("completed")}
           className={filter === "completed" ? "tasks__footer--selected" : ""}
         >
           Completed
         </span>
       </div>
-      <span onClick={() => onClearCompleted()}>Clear Completed</span>
+      <span>Clear Completed</span>
     </div>
   );
 }
