@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const tasks = [
+const initialTasks = [
   {
     text: "Complete online JavaScript course",
     completed: true,
@@ -18,7 +18,7 @@ const tasks = [
 ];
 
 export default function App() {
-  const [taskList, setTaskList] = useState(tasks);
+  const [taskList, setTaskList] = useState(initialTasks);
   const [newTaskText, setNewTaskText] = useState("");
   const [filter, setFilter] = useState("all");
 
@@ -60,6 +60,12 @@ export default function App() {
     handleSetFilter(filter);
   }
 
+  function handleDeleteTask(e, id) {
+    e.preventDefault();
+
+    setTaskList(taskList.filter((task) => task.id !== id));
+  }
+
   function handleSetFilter(selectedFilter) {
     setFilter(selectedFilter);
   }
@@ -83,6 +89,7 @@ export default function App() {
           activeTasks={activeTasks}
           completedTasks={completedTasks}
           onUpdateTasks={handleUpdateTasks}
+          onDeleteTask={handleDeleteTask}
           filter={filter}
         >
           <TasksFooter
@@ -155,6 +162,7 @@ function Tasks({
   onUpdateTasks,
   filter,
   children,
+  onDeleteTask,
 }) {
   return (
     <div className="tasks__container">
@@ -162,6 +170,7 @@ function Tasks({
         ? activeTasks.map((task, i) => (
             <Task
               onUpdateTasks={onUpdateTasks}
+              onDeleteTask={onDeleteTask}
               task={task}
               num={i + 1}
               key={i}
@@ -171,6 +180,7 @@ function Tasks({
         ? completedTasks.map((task, i) => (
             <Task
               onUpdateTasks={onUpdateTasks}
+              onDeleteTask={onDeleteTask}
               task={task}
               num={i + 1}
               key={i}
@@ -179,6 +189,7 @@ function Tasks({
         : taskList.map((task, i) => (
             <Task
               onUpdateTasks={onUpdateTasks}
+              onDeleteTask={onDeleteTask}
               task={task}
               num={i + 1}
               key={i}
@@ -189,10 +200,15 @@ function Tasks({
   );
 }
 
-function Task({ task, onUpdateTasks, num }) {
+function Task({ task, onUpdateTasks, onDeleteTask, num }) {
+  const [isHover, setIsHover] = useState(false);
+
   return (
     <ul className="task">
-      <li>
+      <li
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
+      >
         <input
           type="checkbox"
           name={`cb${num}`}
@@ -208,6 +224,25 @@ function Task({ task, onUpdateTasks, num }) {
         >
           {task.text}
         </label>
+        {isHover && (
+          <div
+            className="task__delete"
+            onClick={(e) => onDeleteTask(e, task.id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+            >
+              <path
+                d="M17.6777 0.707107L16.9706 0L8.83883 8.13173L0.707107 0L0 0.707107L8.13173 8.83883L0 16.9706L0.707106 17.6777L8.83883 9.54594L16.9706 17.6777L17.6777 16.9706L9.54594 8.83883L17.6777 0.707107Z"
+                fill="#494C6B"
+              />
+            </svg>
+          </div>
+        )}
       </li>
     </ul>
   );
