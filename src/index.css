@@ -169,7 +169,7 @@ select {
 }
 
 .todo__input {
-  width: 54rem;
+  width: 100%;
   height: 6.4rem;
   padding-left: 7.2rem;
 
@@ -200,7 +200,7 @@ select {
   box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
   overflow: hidden;
 
-  width: 54rem;
+  width: 100%;
 
   margin-top: 2.4rem;
   margin-bottom: 5rem;
@@ -212,7 +212,7 @@ select {
 
   justify-content: center;
 
-  width: 54rem;
+  width: 100%;
   height: 6.4rem;
   padding: 0 2.4rem;
   margin: 0px;
@@ -296,7 +296,7 @@ select {
   align-items: center;
   justify-content: space-between;
 
-  width: 54rem;
+  width: 100%;
   height: 5rem;
   padding: 0 2.4rem;
   margin: 0px;
