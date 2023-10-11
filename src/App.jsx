@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tasks = [
   {
@@ -18,12 +18,18 @@ const tasks = [
 ];
 
 export default function App() {
-  const [taskArr, setTaskArr] = useState(tasks);
+  const [taskList, setTaskList] = useState(tasks);
+  const [filterList, setFilterList] = useState(tasks);
   const [newTaskText, setNewTaskText] = useState("");
+  const [filter, setFilter] = useState("all");
 
   function handleTaskInput(taskInput) {
     setNewTaskText(taskInput);
   }
+
+  // useEffect(() => {
+  //   handleFilterTasks(filter);
+  // }, []);
 
   function handleTaskSubmit(e) {
     e.preventDefault();
@@ -36,14 +42,26 @@ export default function App() {
       id: crypto.randomUUID(),
     };
 
-    setTaskArr((task) => [...task, newTask]);
+    setTaskList((task) => [...task, newTask]);
+    setFilterList((task) => [...task, newTask]);
 
     setNewTaskText("");
   }
 
-  function handleTaskCompletion(id) {
-    setTaskArr(
-      taskArr.map((task) =>
+  function handleUpdateTasks(id) {
+    setTaskList(
+      taskList.map((task) =>
+        task.id === id
+          ? {
+              ...task,
+              ...(task.completed ? { completed: false } : { completed: true }),
+            }
+          : task
+      )
+    );
+
+    setFilterList(
+      filterList.map((task) =>
         task.id === id
           ? {
               ...task,
@@ -54,8 +72,24 @@ export default function App() {
     );
   }
 
-  function handleActive() {
-    setTaskArr(taskArr.filter((task) => task.completed === false));
+  function handleFilterTasks(selectedFilter) {
+    setFilter(selectedFilter);
+
+    setFilterList(
+      taskList.filter((task) => {
+        if (selectedFilter === "active") {
+          return !task.completed;
+        }
+        if (selectedFilter === "completed") {
+          return task.completed;
+        }
+        return true;
+      })
+    );
+
+    if (selectedFilter === "all") {
+      setFilterList(taskList);
+    }
   }
 
   return (
@@ -68,8 +102,12 @@ export default function App() {
           onTaskInput={handleTaskInput}
           onTaskSubmit={handleTaskSubmit}
         />
-        <Tasks taskArr={taskArr} onTaskCompletion={handleTaskCompletion}>
-          <TasksFooter taskArr={taskArr} onActive={handleActive} />
+        <Tasks taskList={filterList} onUpdateTasks={handleUpdateTasks}>
+          <TasksFooter
+            taskList={filterList}
+            onFilterTasks={handleFilterTasks}
+            filter={filter}
+          />
         </Tasks>
         <BottomMessage />
       </TodoContainer>
@@ -127,23 +165,18 @@ function TaskInput({ newTaskText, onTaskInput, onTaskSubmit }) {
   );
 }
 
-function Tasks({ taskArr, onTaskCompletion, children }) {
+function Tasks({ taskList, onUpdateTasks, children }) {
   return (
     <div className="tasks__container">
-      {taskArr.map((task, i) => (
-        <Task
-          onTaskCompletion={onTaskCompletion}
-          task={task}
-          num={i + 1}
-          key={i}
-        />
+      {taskList.map((task, i) => (
+        <Task onUpdateTasks={onUpdateTasks} task={task} num={i + 1} key={i} />
       ))}
       {children}
     </div>
   );
 }
 
-function Task({ task, onTaskCompletion, num }) {
+function Task({ task, onUpdateTasks, num }) {
   return (
     <ul className="task">
       <li>
@@ -154,7 +187,7 @@ function Task({ task, onTaskCompletion, num }) {
           className={
             task.completed ? "task__checkbox-checked" : "task__checkbox"
           }
-          onChange={() => onTaskCompletion(task.id)}
+          onChange={() => onUpdateTasks(task.id)}
         />
         <label
           htmlFor={`cb${num}`}
@@ -167,17 +200,32 @@ function Task({ task, onTaskCompletion, num }) {
   );
 }
 
-function TasksFooter({ taskArr, onActive }) {
+function TasksFooter({ taskList, onFilterTasks, filter }) {
   return (
     <div className="tasks__footer">
       <span>
-        {Object(taskArr.filter((task) => task.completed === false)).length}{" "}
+        {Object(taskList.filter((task) => task.completed === false)).length}{" "}
         items left
       </span>
       <div>
-        <span>All</span>
-        <span onClick={onActive}>Active</span>
-        <span>Completed</span>
+        <span
+          onClick={() => onFilterTasks("all")}
+          className={filter === "all" ? "tasks__footer--selected" : ""}
+        >
+          All
+        </span>
+        <span
+          onClick={() => onFilterTasks("active")}
+          className={filter === "active" ? "tasks__footer--selected" : ""}
+        >
+          Active
+        </span>
+        <span
+          onClick={() => onFilterTasks("completed")}
+          className={filter === "completed" ? "tasks__footer--selected" : ""}
+        >
+          Completed
+        </span>
       </div>
       <span>Clear Completed</span>
     </div>

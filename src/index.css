@@ -288,7 +288,7 @@ select {
   justify-content: space-between;
 
   width: 54rem;
-  height: 6.4rem;
+  height: 5rem;
   padding: 0 2.4rem;
   margin: 0px;
 
@@ -306,7 +306,7 @@ select {
   font-weight: 700;
 }
 
-.tasks__footer > div > span:first-child {
+.tasks__footer--selected {
   color: var(--font-selected-color);
 }
 
