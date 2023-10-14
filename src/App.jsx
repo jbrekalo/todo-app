@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const initialTasks = [
   {
@@ -21,9 +21,22 @@ export default function App() {
   const [taskList, setTaskList] = useState(initialTasks);
   const [newTaskText, setNewTaskText] = useState("");
   const [filter, setFilter] = useState("all");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 550);
 
   let activeTasks = taskList.filter((task) => !task.completed);
   let completedTasks = taskList.filter((task) => task.completed);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 550);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   function handleTaskInput(taskInput) {
     setNewTaskText(taskInput);
@@ -97,8 +110,17 @@ export default function App() {
             onSetFilter={handleSetFilter}
             filter={filter}
             onClearCompleted={handleClearCompleted}
+            isMobile={isMobile}
           />
         </Tasks>
+        {isMobile && (
+          <TasksFooterFilters
+            onSetFilter={handleSetFilter}
+            filter={filter}
+            onClearCompleted={handleClearCompleted}
+            isMobile={isMobile}
+          />
+        )}
         <BottomMessage />
       </TodoContainer>
     </div>
@@ -106,13 +128,7 @@ export default function App() {
 }
 
 function BackgroundImage() {
-  return (
-    <img
-      src="./images/bg-desktop-light.jpg"
-      alt=""
-      className="background-photo"
-    />
-  );
+  return <div className="background-photo"></div>;
 }
 
 function TodoContainer({ children }) {
@@ -125,10 +141,11 @@ function Header() {
       <p>todo</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="26"
-        height="26"
+        width="100%"
+        height="100%"
         viewBox="0 0 26 26"
         fill="none"
+        className="todo__darkmode-icon"
       >
         <path
           d="M15.3717 0.215831C10.5931 1.19962 7 5.4302 7 10.5C7 16.299 11.701 21 17.5 21C20.4958 21 23.1986 19.7454 25.1116 17.7328C23.2191 22.5722 18.5098 26 13 26C5.8203 26 0 20.1797 0 13C0 5.8203 5.8203 0 13 0C13.81 0 14.6027 0.0740788 15.3717 0.215831Z"
@@ -231,8 +248,8 @@ function Task({ task, onUpdateTasks, onDeleteTask, num }) {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
+              width="100%"
+              height="100%"
               viewBox="0 0 18 18"
               fill="none"
             >
@@ -248,34 +265,53 @@ function Task({ task, onUpdateTasks, onDeleteTask, num }) {
   );
 }
 
-function TasksFooter({ taskList, onSetFilter, filter, onClearCompleted }) {
+function TasksFooter({
+  taskList,
+  onClearCompleted,
+  onSetFilter,
+  filter,
+  isMobile,
+}) {
   return (
     <div className="tasks__footer">
       <span>
         {Object(taskList.filter((task) => task.completed === false)).length}{" "}
         items left
       </span>
-      <div>
-        <span
-          onClick={() => onSetFilter("all")}
-          className={filter === "all" ? "tasks__footer--selected" : ""}
-        >
-          All
-        </span>
-        <span
-          onClick={() => onSetFilter("active")}
-          className={filter === "active" ? "tasks__footer--selected" : ""}
-        >
-          Active
-        </span>
-        <span
-          onClick={() => onSetFilter("completed")}
-          className={filter === "completed" ? "tasks__footer--selected" : ""}
-        >
-          Completed
-        </span>
-      </div>
+      {!isMobile && (
+        <TasksFooterFilters
+          onSetFilter={onSetFilter}
+          filter={filter}
+          isMobile={isMobile}
+        />
+      )}
       <span onClick={() => onClearCompleted()}>Clear Completed</span>
+    </div>
+  );
+}
+
+function TasksFooterFilters({ onSetFilter, filter, isMobile }) {
+  console.log(isMobile);
+  return (
+    <div className={isMobile ? "task__footer-filter" : ""}>
+      <span
+        onClick={() => onSetFilter("all")}
+        className={filter === "all" ? "tasks__footer--selected" : ""}
+      >
+        All
+      </span>
+      <span
+        onClick={() => onSetFilter("active")}
+        className={filter === "active" ? "tasks__footer--selected" : ""}
+      >
+        Active
+      </span>
+      <span
+        onClick={() => onSetFilter("completed")}
+        className={filter === "completed" ? "tasks__footer--selected" : ""}
+      >
+        Completed
+      </span>
     </div>
   );
 }

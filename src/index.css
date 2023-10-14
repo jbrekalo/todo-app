@@ -134,7 +134,12 @@ select {
   position: fixed;
   top: 0;
   width: 100vw;
+  height: 29rem;
+
   z-index: -1;
+
+  background: no-repeat center 100% url(../images/bg-desktop-light.jpg);
+  background-size: cover;
 }
 
 .main {
@@ -166,6 +171,9 @@ select {
 }
 
 .todo__header > svg {
+  width: 2.6rem;
+  height: 2.6rem;
+
   cursor: pointer;
 }
 
@@ -204,7 +212,6 @@ select {
   width: 100%;
 
   margin-top: 2.4rem;
-  margin-bottom: 5rem;
 }
 
 .task {
@@ -300,7 +307,6 @@ select {
   width: 100%;
   height: 5rem;
   padding: 0 2.4rem;
-  margin: 0px;
 
   color: var(--font-secondary-color);
   font-size: 1.4rem;
@@ -340,12 +346,54 @@ select {
   font-weight: 400;
   color: var(--font-secondary-color);
 
+  margin-top: 5rem;
   margin-bottom: 5.2rem;
 }
 
+.task__footer-filter {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.9rem;
+
+  width: 100%;
+  height: 4.8rem;
+  margin-top: 1.6rem;
+
+  color: var(--font-secondary-color);
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  border-radius: 0.5rem;
+  box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
+  background-color: var(--table-primary-color);
+}
+
+.task__footer-filter > span {
+  cursor: pointer;
+}
+
+.task__footer-filter > span:hover {
+  color: var(--font-primary-color);
+}
+
 @media (max-width: 550px) {
+  .background-photo {
+    height: 20rem;
+
+    background: no-repeat center auto 100% url(../images/bg-mobile-light.jpg);
+  }
+
   .todo__header {
-    font-size: 2rem;
+    margin-top: 4.8rem;
+    margin-bottom: 4rem;
+
+    font-size: 2.2rem;
+  }
+
+  .todo__header > svg {
+    width: 2rem;
+    height: 2rem;
   }
 
   .todo__input {
@@ -368,8 +416,8 @@ select {
 
     width: 100%;
 
-    margin-top: 2.4rem;
-    margin-bottom: 5rem;
+    margin-top: 1.6rem;
+    margin-bottom: 0rem;
   }
 
   .task {
@@ -404,20 +452,20 @@ select {
   }
 
   .tasks__footer {
-    display: flex;
+    height: 5rem;
+    padding: 0 2rem;
 
-    align-items: center;
-    justify-content: space-between;
+    font-size: 1.2rem;
+  }
 
-    width: 100%;
-    height: 4.8rem;
-    padding: 0 2.4rem;
-    margin: 1.6rem;
-
-    color: var(--font-secondary-color);
+  .bottom-message {
+    text-align: center;
     font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--font-secondary-color);
 
-    box-shadow: 0px 35px 50px -15px rgba(194, 195, 214, 0.5);
-    background-color: var(--table-primary-color);
+    margin-top: 4rem;
+    margin-bottom: 5.2rem;
   }
 }
