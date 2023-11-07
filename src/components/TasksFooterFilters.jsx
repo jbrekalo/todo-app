@@ -1,21 +1,24 @@
-function TasksFooterFilters({ onSetFilter, filter, isMobile }) {
-  console.log(isMobile);
+import { useTodo } from "../contexts/TodoContext";
+
+function TasksFooterFilters() {
+  const { handleSetFilter, filter, isMobile } = useTodo();
+
   return (
     <div className={isMobile ? "task__footer-filter" : ""}>
       <span
-        onClick={() => onSetFilter("all")}
+        onClick={() => handleSetFilter("all")}
         className={filter === "all" ? "tasks__footer--selected" : ""}
       >
         All
       </span>
       <span
-        onClick={() => onSetFilter("active")}
+        onClick={() => handleSetFilter("active")}
         className={filter === "active" ? "tasks__footer--selected" : ""}
       >
         Active
       </span>
       <span
-        onClick={() => onSetFilter("completed")}
+        onClick={() => handleSetFilter("completed")}
         className={filter === "completed" ? "tasks__footer--selected" : ""}
       >
         Completed

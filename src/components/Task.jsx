@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function Task({ task, onUpdateTasks, onDeleteTask, num }) {
-  const [isHover, setIsHover] = useState(false);
+  const [isHover, setIsHover] = useState();
 
   return (
     <ul className="task">

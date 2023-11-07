@@ -1,4 +1,8 @@
-function TaskInput({ newTaskText, onTaskInput, onTaskSubmit }) {
+import { useTodo } from "../contexts/TodoContext";
+
+function TaskInput() {
+  const { newTaskText, onTaskInput, onTaskSubmit } = useTodo();
+
   return (
     <form action="submit" onSubmit={onTaskSubmit}>
       <input

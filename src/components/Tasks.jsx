@@ -1,21 +1,23 @@
+import { useTodo } from "../contexts/TodoContext";
 import Task from "./Task";
 
-function Tasks({
-  taskList,
-  activeTasks,
-  completedTasks,
-  onUpdateTasks,
-  filter,
-  children,
-  onDeleteTask,
-}) {
+function Tasks({ children }) {
+  const {
+    taskList,
+    activeTasks,
+    completedTasks,
+    handleUpdateTasks,
+    filter,
+    handleDeleteTask,
+  } = useTodo();
+
   return (
     <div className="tasks__container">
       {filter === "active"
         ? activeTasks.map((task, i) => (
             <Task
-              onUpdateTasks={onUpdateTasks}
-              onDeleteTask={onDeleteTask}
+              onUpdateTasks={handleUpdateTasks}
+              onDeleteTask={handleDeleteTask}
               task={task}
               num={i + 1}
               key={i}
@@ -24,8 +26,8 @@ function Tasks({
         : filter === "completed"
         ? completedTasks.map((task, i) => (
             <Task
-              onUpdateTasks={onUpdateTasks}
-              onDeleteTask={onDeleteTask}
+              onUpdateTasks={handleUpdateTasks}
+              onDeleteTask={handleDeleteTask}
               task={task}
               num={i + 1}
               key={i}
@@ -33,8 +35,8 @@ function Tasks({
           ))
         : taskList.map((task, i) => (
             <Task
-              onUpdateTasks={onUpdateTasks}
-              onDeleteTask={onDeleteTask}
+              onUpdateTasks={handleUpdateTasks}
+              onDeleteTask={handleDeleteTask}
               task={task}
               num={i + 1}
               key={i}

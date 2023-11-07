@@ -1,12 +1,10 @@
+import { useTodo } from "../contexts/TodoContext";
 import TasksFooterFilters from "./TasksFooterFilters";
 
-function TasksFooter({
-  taskList,
-  onClearCompleted,
-  onSetFilter,
-  filter,
-  isMobile,
-}) {
+function TasksFooter() {
+  const { taskList, handleClearCompleted, handleSetFilter, filter, isMobile } =
+    useTodo();
+
   return (
     <div className="tasks__footer">
       <span>
@@ -15,12 +13,12 @@ function TasksFooter({
       </span>
       {!isMobile && (
         <TasksFooterFilters
-          onSetFilter={onSetFilter}
+          onSetFilter={handleSetFilter}
           filter={filter}
           isMobile={isMobile}
         />
       )}
-      <span onClick={() => onClearCompleted()}>Clear Completed</span>
+      <span onClick={() => handleClearCompleted()}>Clear Completed</span>
     </div>
   );
 }
