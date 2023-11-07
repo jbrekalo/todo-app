@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTodo } from "../contexts/TodoContext";
 
-function Task({ task, onUpdateTasks, onDeleteTask, num }) {
+function Task({ task, num }) {
   const [isHover, setIsHover] = useState();
+  const { handleUpdateTasks, handleDeleteTask } = useTodo();
 
   return (
     <ul className="task">
@@ -16,7 +18,7 @@ function Task({ task, onUpdateTasks, onDeleteTask, num }) {
           className={
             task.completed ? "task__checkbox-checked" : "task__checkbox"
           }
-          onChange={() => onUpdateTasks(task.id)}
+          onChange={() => handleUpdateTasks(task.id)}
         />
         <label
           htmlFor={`cb${num}`}
@@ -27,7 +29,7 @@ function Task({ task, onUpdateTasks, onDeleteTask, num }) {
         {isHover && (
           <div
             className="task__delete"
-            onClick={(e) => onDeleteTask(e, task.id)}
+            onClick={(e) => handleDeleteTask(e, task.id)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import BackgroundImage from "./components/BackgrountImage";
 import TodoContainer from "./components/TodoContainer";
 import Header from "./components/Header";
